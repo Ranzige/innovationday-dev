@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Page Title</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.mobile-1.4.5.min.css') }}" />
+    <script src="{{ url_for('static', filename='js/jquery-1.12.4.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.mobile-1.4.5.min.js') }}"></script>
+    <script language="JavaScript">
+       $(document).ready(function() {
+           $('div.demo-page').on("swipeleft", function () {
+                var nextpage = $(this).next('div[data-role="page"]');
+                if (nextpage.length > 0) {
+                    $.mobile.changePage(nextpage, "slide", false, true);
+                }
+            });
+            $('div.demo-page').on("swiperight", function () {
+                var prevpage = $(this).prev('div[data-role="page"]');
+                if (prevpage.length > 0) {
+                    $.mobile.changePage(prevpage, {
+                        transition: "slide",
+                        reverse: true
+                    }, true, true);
+                }
+            });
+       });
+
+
+
+    </script>
+</head>
+
+<body>
+	<div class="demo-page" data-role="page" id="first-page" data-dom-cache="true" data-prev="" data-next="#second-page">
+
+        <div data-role="header">
+            <h1>Delivery Information</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <label for="Batch">Batch#:</label>
+            <input name="number" pattern="[0-9]*" id="Batch" value="" type="number">
+            <label for="Container" class="select">Container:</label>
+            <select name="select-choice-8" id="Container" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
+                <option>Choose a few options:</option>
+                <optgroup label="Sweet">
+                    <option value="S001" selected="">S001</option>
+                    <option value="S002">S002</option>
+                    <option value="S003">S003</option>
+                    <option value="S004">S004</option>
+                </optgroup>
+                <optgroup label="Coco">
+                    <option value="C001">C001</option>
+                    <option value="C002">C002</option>
+                    <option value="C003">C003</option>
+                </optgroup>
+            </select>
+            <label for="deliveryman">Deliveryman:</label>
+            <input name="deliveryman" id="deliveryman" value="" type="text">
+            <label for="Order">Order:</label>
+            <input name="number" pattern="[0-9]*" id="Order" value="" type="number">
+            <label for="Vehicle" class="select">Vehicle:</label>
+            <select name="select-choice-9" id="Vehicle" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
+                <option>Choose a few options:</option>
+                <optgroup label="吉运">
+                    <option value="吉A00001" selected="">吉A00001</option>
+                    <option value="吉A00002">吉A00002</option>
+                    <option value="吉A00003">吉A00003</option>
+                    <option value="吉A00004">吉A00004</option>
+                </optgroup>
+                <optgroup label="辽运">
+                    <option value="辽A00001">辽A00001</option>
+                    <option value="辽A00002">辽A00002</option>
+                    <option value="辽A00003">辽A00003</option>
+                </optgroup>
+            </select>
+            <label for="Driver" class="select">Driver:</label>
+            <select name="select-choice-2" id="Driver" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
+                <option>Choose a few options:</option>
+                <optgroup label="吉运">
+                    <option value="张三" selected="">张三</option>
+                    <option value="李四">李四</option>
+                    <option value="王五">王五</option>
+                    <option value="贾六">贾六</option>
+                </optgroup>
+                <optgroup label="辽运">
+                    <option value="小王">小王</option>
+                    <option value="小赵">小赵</option>
+                    <option value="小李">小李</option>
+                </optgroup>
+            </select>
+            <label for="text-target">Destination:</label>
+            <input name="text-basic" id="text-target" value="" type="text">
+            <label for="text-start">Start:</label>
+            <input name="text-basic" id="text-start" value="" type="text">
+            <label for="road-path" class="select">Path:</label>
+            <select name="road-path" id="road-path" multiple="multiple" data-native-menu="false" data-icon="grid" data-iconpos="left">
+                <option>Choose a few options:</option>
+                <optgroup label="Target">
+                    <option value="Location1" selected="">北京</option>
+                    <option value="Location2">天津</option>
+                    <option value="Location3">山东</option>
+                    <option value="Location4">河北</option>
+                </optgroup>
+            </select>
+            <button class="ui-btn ui-btn-b" onclick="sendValue()">Submit</button>
+            <script language="JavaScript">
+                function sendValue() {
+                    var batch = $("#Batch").val();
+                    var container =[];
+                    $('#Container :selected').each(function(i, selected){
+                      container[i] = $(selected).text();
+                    });
+                    var deliveryman = $("#deliveryman").val();
+                    var order = $("#Order").val();
+                    var vehicle =[];
+                    $('#Vehicle :selected').each(function(i, selected){
+                      vehicle[i] = $(selected).text();
+                    });
+                    var driver =[];
+                    $('#Driver :selected').each(function(i, selected){
+                      driver[i] = $(selected).text();
+                    });
+                    var target = $("#text-target").val();
+                    var start = $("#text-start").val();
+                    var tmp_path =[];
+                    $('#road-path :selected').each(function(i, selected){
+                      tmp_path[i] = $(selected).text();
+                    });
+                    var path = [];
+                    path.push(start);
+                    path.push.apply(path,tmp_path);
+                    path.push(target);
+                    var postVar = {
+                        "batch":batch,
+                        "container":container,
+                        "deliveryman":deliveryman,
+                        "order":order,
+                        "vehicle":vehicle,
+                        "driver":driver,
+                        "target":target,
+                        "start":start,
+                        "path":path
+                    };
+                    window.localStorage.setItem("batch",batch);
+                    window.localStorage.setItem("container",container);
+                    window.localStorage.setItem("deliveryman",deliveryman);
+                    window.localStorage.setItem("order",order);
+                    window.localStorage.setItem("vehicle",vehicle);
+                    window.localStorage.setItem("driver",driver);
+                    window.localStorage.setItem("target",target);
+                    window.localStorage.setItem("start",start);
+                    window.localStorage.setItem("path",path);
+                    localStorage.clickCount = 0;
+                    $.post('/init', postVar).done(function (data) {
+                        alert(JSON.stringify(data));
+                        document.getElementById('result').innerHTML = " ";
+                    });
+
+                }
+            </script>
+        </div><!-- /content -->
+
+        <div data-role="footer">
+            <h4 >Page Footer1</h4>
+        </div><!-- /footer -->
+
+    </div>
+    <div class="demo-page" data-role="page" id="second-page" data-dom-cache="true" data-prev="#first-page" data-next="">
+
+        <div data-role="header">
+            <h1>Transfer Information</h1>
+        </div><!-- /header -->
+
+        <div role="main" class="ui-content">
+            <p><button class="ui-btn ui-btn-b" onclick="showValue()">Inquire</button></p>
+            <script language="JavaScript">
+                function showValue(){
+
+                    var batch = localStorage.getItem("batch");
+                    var container = localStorage.getItem("container");
+                    var containerArray = container.split(",");
+                    var deliveryman = localStorage.getItem("deliveryman");
+                    var order = localStorage.getItem("order");
+                    var vehicleStart = localStorage.getItem("vehicle");
+                    var vehicleArray = vehicleStart.split(",");
+                    var vehicle = [];
+                    vehicle.push(vehicleArray[0]);
+                    var driverStart = localStorage.getItem("driver");
+                    var driverArray = driverStart.split(",");
+                    var driver = [];
+                    driver.push(driverArray[0]);
+                    driver.push(driverArray[1]);
+                    var path = localStorage.getItem("path");
+                    var pathArray = path.split(",");
+                    var location = pathArray[0];
+                    var count = 0;
+                    if (localStorage.clickCount) {
+                        localStorage.clickCount = Number(localStorage.clickCount)+1;
+                        count = parseInt(localStorage.clickCount / 5);
+
+                        if (count < pathArray.length){
+                            location = pathArray[count]
+                        }
+                        else{
+                            location = pathArray[pathArray.length - 1];
+                        }
+                    } else {
+                        localStorage.clickCount = 0;
+                    }
+
+
+
+                    var postVar2 = {
+                        "batch":batch,
+                        "container":containerArray,
+                        "deliveryman":deliveryman,
+                        "order":order,
+                        "vehicle":vehicle,
+                        "driver":driver,
+                        "location":location
+
+                    };
+                    $.post('/initWay', postVar2).done(function (data) {
+                        alert("提交成功："+JSON.stringify(data));
+                        document.getElementById("result").innerHTML = "<ol><li>Batch#:" +data["batch"]+ "</li>"+
+                                                                  "<li>Container#:" +data["container"]+ "</li>"+
+                                                                  "<li>Deliveryman#:" +data["deliveryman"]+ "</li>"+
+                                                                  "<li>Order#:" +data["order"]+ "</li>"+
+                                                                  "<li>Vehicle#:" +data["vehicle"]+ "</li>"+
+                                                                  "<li>Driver#:" +data["driver"]+ "</li>"+
+                                                                  "<li>Location#:" +data["location"]+ "</li></ol>"+
+
+                                                                  "You have clicked the button " + localStorage.clickCount + " time(s).";
+                    });
+
+
+
+                }
+            </script>
+            <div id="result"></div>
+        </div><!-- /content -->
+
+        <div data-role="footer">
+            <h4>Page Footer2</h4>
+        </div><!-- /footer -->
+    </div>
+</body>
+</html>
